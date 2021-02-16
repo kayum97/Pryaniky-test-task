@@ -22,7 +22,7 @@
 		844D89B525DA75B6005C266C /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D89B425DA75B6005C266C /* UIViewControllerExtensions.swift */; };
 		844D89BB25DA7842005C266C /* SandboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D89BA25DA7842005C266C /* SandboxViewModel.swift */; };
 		844D89BE25DA7AB9005C266C /* AppError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844D89BD25DA7AB9005C266C /* AppError.swift */; };
-		8450AD6225DBB290009127B2 /* AssemblyBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8450AD6125DBB290009127B2 /* AssemblyBuilder.swift */; };
+		8450AD6225DBB290009127B2 /* SandboxScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8450AD6125DBB290009127B2 /* SandboxScreenBuilder.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,7 +43,7 @@
 		844D89B425DA75B6005C266C /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		844D89BA25DA7842005C266C /* SandboxViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxViewModel.swift; sourceTree = "<group>"; };
 		844D89BD25DA7AB9005C266C /* AppError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppError.swift; sourceTree = "<group>"; };
-		8450AD6125DBB290009127B2 /* AssemblyBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssemblyBuilder.swift; sourceTree = "<group>"; };
+		8450AD6125DBB290009127B2 /* SandboxScreenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SandboxScreenBuilder.swift; sourceTree = "<group>"; };
 		92E73685EDBB572AC38C8ADC /* Pods_test_task.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_test_task.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF2A2D465FE56A263D68572F /* Pods-test-task.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-test-task.debug.xcconfig"; path = "Target Support Files/Pods-test-task/Pods-test-task.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -125,7 +125,7 @@
 				8445911325D9701100465170 /* cells */,
 				844D89BA25DA7842005C266C /* SandboxViewModel.swift */,
 				844590E525D93BA000465170 /* SandboxViewController.swift */,
-				8450AD6125DBB290009127B2 /* AssemblyBuilder.swift */,
+				8450AD6125DBB290009127B2 /* SandboxScreenBuilder.swift */,
 			);
 			path = SandboxScreen;
 			sourceTree = "<group>";
@@ -281,7 +281,7 @@
 			files = (
 				8445912025D987F600465170 /* PictureCell.swift in Sources */,
 				8445912B25D9902D00465170 /* SelectorCell.swift in Sources */,
-				8450AD6225DBB290009127B2 /* AssemblyBuilder.swift in Sources */,
+				8450AD6225DBB290009127B2 /* SandboxScreenBuilder.swift in Sources */,
 				844D89B525DA75B6005C266C /* UIViewControllerExtensions.swift in Sources */,
 				844D89BB25DA7842005C266C /* SandboxViewModel.swift in Sources */,
 				844590FA25D93C9500465170 /* ResponseModel.swift in Sources */,

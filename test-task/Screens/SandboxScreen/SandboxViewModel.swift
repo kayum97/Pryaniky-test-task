@@ -11,14 +11,14 @@ import RxCocoa
 
 protocol SandboxViewModelProtocol: class {
     var dictionaryRelay: BehaviorRelay<[String:Any]> { get }
-    var viewRelay: BehaviorRelay<[ViewModel]>  { get }
+    var viewsRelay: BehaviorRelay<[ViewModel]>  { get }
     var errorSubject: PublishSubject<Error> { get }
     func loadData()
 }
 
 class SandboxViewModel: SandboxViewModelProtocol {
     let dictionaryRelay = BehaviorRelay<[String:Any]>(value: [:])
-    let viewRelay = BehaviorRelay<[ViewModel]>(value: [])
+    let viewsRelay = BehaviorRelay<[ViewModel]>(value: [])
     let errorSubject = PublishSubject<Error>()
     
     private var service = API()
@@ -30,9 +30,9 @@ class SandboxViewModel: SandboxViewModelProtocol {
                 self.errorSubject.onNext(error)
                 return .empty()
             }
-            .bind{ [weak self] value in
-                self?.viewRelay.accept(value.view)
+            .bind { [weak self] value in
                 self?.setData(result: value.data)
+                self?.viewsRelay.accept(value.view)
             }
             .disposed(by: disposeBag)
     }

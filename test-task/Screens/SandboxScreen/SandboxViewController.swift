@@ -22,13 +22,15 @@ class SandboxViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         
+        bindViewModel()
         bindUi()
         self.sandboxViewModel?.loadData()
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
         
-        configureTasksTableView()
+        configureTableView()
     }
     
     @objc
@@ -36,59 +38,48 @@ class SandboxViewController: UIViewController {
         self.view.endEditing(true)
     }
     
-    private func bindUi() {
+    private func createTextBlockCell(indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: TextCell.identifierForTextCell, for: indexPath) as! TextCell
+        cell.data = self.dictionary["hz"] as? TextModel
+        return cell
+    }
+    
+    private func createPictureBlockCell(indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: PictureCell.identifierForPictureCell, for: indexPath) as! PictureCell
+        cell.data = self.dictionary["picture"] as? PictureModel
+        return cell
+    }
+    
+    private func createSelectorBlockCell(indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SelectorCell.identifierForSelectorCell, for: indexPath) as! SelectorCell
+        guard let data = self.dictionary["selector"] as? SelectorModel else { return UITableViewCell() }
+        cell.data = data.variants
+        cell.pickerView.rx.itemSelected.bind{ [weak self] data in
+            guard let self = self, let selectorData = self.dictionary["selector"] as? SelectorModel else { return }
+            self.showSimpleAlert(title: "", message: "id \(data.row + 1)\n\(selectorData.variants[data.row].text)")
+        }.disposed(by: disposeBag)
+        return cell
+    }
+    
+    private func bindViewModel() {
         self.sandboxViewModel.dictionaryRelay.bind{ [weak self] data in
             guard let self = self else { return }
             self.dictionary = data
         }.disposed(by: disposeBag)
         
-        self.sandboxViewModel.viewRelay.bind(to: tableView.rx.items) {[weak self] (tableView, row, element) -> UITableViewCell in
+        self.sandboxViewModel.viewsRelay.bind(to: tableView.rx.items) {[weak self] (tableView, row, element) -> UITableViewCell in
             guard let self = self else { return UITableViewCell() }
             
             let indexPath = IndexPath(row: row, section: 0)
-            if element.rawValue == "hz" {
-                let cell = tableView.dequeueReusableCell(withIdentifier: TextCell.identifierForTextCell, for: indexPath) as! TextCell
-                cell.data = self.dictionary["hz"] as? TextModel
-                return cell
+            switch element {
+            case .hz:
+                return self.createTextBlockCell(indexPath: indexPath)
+            case .picture:
+                return self.createPictureBlockCell(indexPath: indexPath)
+            case .selector:
+                return self.createSelectorBlockCell(indexPath: indexPath)
             }
-            
-            if element.rawValue == "picture" {
-                let cell = tableView.dequeueReusableCell(withIdentifier: PictureCell.identifierForPictureCell, for: indexPath) as! PictureCell
-                cell.data = self.dictionary["picture"] as? PictureModel
-                return cell
-            }
-            
-            if element.rawValue == "selector" {
-                let cell = tableView.dequeueReusableCell(withIdentifier: SelectorCell.identifierForSelectorCell, for: indexPath) as! SelectorCell
-                guard let data = self.dictionary["selector"] as? SelectorModel else { return UITableViewCell() }
-                cell.data = data.variants
-                cell.pickerView.rx.itemSelected.bind{ [weak self] data in
-                    guard let self = self, let selectorData = self.dictionary["selector"] as? SelectorModel else { return }
-                    self.showSimpleAlert(title: "", message: "id \(data.row + 1)\n\(selectorData.variants[data.row].text)")
-                }.disposed(by: self.disposeBag)
-                return cell
-            }
-            return UITableViewCell()
         }.disposed(by: disposeBag)
-        
-        tableView.rx.itemSelected
-            .bind { [weak self] indexPath in
-                guard let self = self else { return }
-                let cell = self.tableView.cellForRow(at: indexPath)
-                self.tableView.deselectRow(at: indexPath, animated: true)
-                switch cell {
-                case is TextCell:
-                    guard let cell = cell as? TextCell,
-                          let data = cell.data else { return }
-                    self.showSimpleAlert(title: "", message: "\(data.text)")
-                case is PictureCell:
-                    guard let cell = cell as? PictureCell,
-                          let data = cell.data else { return }
-                    self.showSimpleAlert(title: "", message: "\(data.text)")
-                default:
-                    self.showSimpleAlert(title: "Error", message: "No data")
-                }
-            }.disposed(by: disposeBag)
         
         self.sandboxViewModel.errorSubject.map { error -> String? in
             switch error {
@@ -106,7 +97,30 @@ class SandboxViewController: UIViewController {
         .disposed(by: disposeBag)
     }
     
-    private func configureTasksTableView() {
+    private func bindUi() {
+        tableView.rx.itemSelected
+            .bind { [weak self] indexPath in
+                guard let self = self else { return }
+                let cell = self.tableView.cellForRow(at: indexPath)
+                self.tableView.deselectRow(at: indexPath, animated: true)
+                switch cell {
+                case is TextCell:
+                    guard let cell = cell as? TextCell,
+                          let data = cell.data else { return }
+                    self.showSimpleAlert(title: "", message: "\(data.text)")
+                case is PictureCell:
+                    guard let cell = cell as? PictureCell,
+                          let data = cell.data else { return }
+                    self.showSimpleAlert(title: "", message: "\(data.text)")
+                case is SelectorCell:
+                    break
+                default:
+                    self.showSimpleAlert(title: "Error", message: "Unknown UI element")
+                }
+            }.disposed(by: disposeBag)
+    }
+    
+    private func configureTableView() {
         view.addSubview(tableView)
         tableView.register(TextCell.self, forCellReuseIdentifier: TextCell.identifierForTextCell)
         tableView.register(PictureCell.self, forCellReuseIdentifier: PictureCell.identifierForPictureCell)

@@ -12,10 +12,10 @@ import RxSwift
 class API {
     
     private let baseUrl = "https://pryaniky.com/static/json/"
-    private let noteUrl = "sample.json"
+    private let endPointUrl = "sample.json"
     
     func loadData() -> Observable<ResponseModel> {
-        guard let url = URL(string: baseUrl + noteUrl) else {
+        guard let url = URL(string: baseUrl + endPointUrl) else {
             return .error(AppError.urlError)
         }
         

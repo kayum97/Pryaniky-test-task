@@ -1,5 +1,5 @@
 //
-//  AssemblyBuilder.swift
+//  SandboxScreenBuilder.swift
 //  test-task
 //
 //  Created by Admin on 16.02.2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AssemblyBuilder {
+class SandboxScreenBuilder {
     func createSandboxScreen() -> UIViewController {
         let sandboxViewController = SandboxViewController()
         let sandboxViewModel = SandboxViewModel()
